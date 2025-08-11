@@ -57,7 +57,7 @@ const Title = ({ subtitle, text }) => {
       </div>
       <h1
         ref={titleRef}
-        className='text-[40px] font-medium text-[#28282C] mt-4'
+        className='text-[40px] font-medium text-[#28282C] mt-4 max-w-xs'
       >
         {text}
       </h1>

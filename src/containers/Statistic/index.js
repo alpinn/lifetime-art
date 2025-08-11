@@ -55,7 +55,7 @@ const Statistic = () => {
   return (
     <div
       ref={statsRef}
-      className='grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-16 xl:gap-32 py-8 sm:py-12 lg:py-16'
+      className='grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-16 xl:gap-32 py-8 sm:py-12 lg:py-16 px-4 md:px-8 lg:px-12 xl:px-16'
     >
       {statistic.map((item) => (
         <div key={item.title} className='stat-item'>

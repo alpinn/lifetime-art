@@ -34,7 +34,7 @@ const images = [
 const About = () => {
   return (
     <div className='bg-white'>
-      <div className='mx-auto py-8 sm:py-12 lg:py-20 px-4 md:px-8 lg:px-12 xl:px-16'>
+      <div className='mx-auto py-8 sm:py-12 lg:py-20'>
         <Intro />
         <ImageCarousel images={images} />
         <Statistic />

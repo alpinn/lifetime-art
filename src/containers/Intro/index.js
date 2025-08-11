@@ -33,8 +33,8 @@ const Intro = () => {
 
   return (
     <>
-      <div className='flex flex-col lg:flex-row justify-between py-8 sm:py-12 lg:py-16 gap-6 lg:gap-8'>
-        <div className='max-w-md'>
+      <div className='flex flex-col lg:flex-row justify-between py-8 sm:py-12 lg:py-16 gap-6 lg:gap-8 px-4 md:px-8 lg:px-12 xl:px-16'>
+        <div>
           <Title subtitle='About us' text='Home Improvement Specialists' />
         </div>
         <div ref={introRef} className='max-w-xl'>

@@ -64,11 +64,10 @@ const services = [
   },
 ];
 
-const Services = () => {
+const Service = () => {
   const [activeService, setActiveService] = useState('kitchens');
   const [expandedItems, setExpandedItems] = useState({ kitchens: true });
 
-  const titleRef = useRef(null);
   const imageRef = useRef(null);
   const accordionRef = useRef(null);
   const descriptionRefs = useRef({});
@@ -89,25 +88,6 @@ const Services = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        titleRef.current,
-        {
-          opacity: 0,
-          y: 20,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: titleRef.current,
-            start: 'top 80%',
-            once: true,
-          },
-        }
-      );
-
       gsap.fromTo(
         accordionRef.current?.querySelectorAll('.service-item') || [],
         {
@@ -174,12 +154,9 @@ const Services = () => {
   return (
     <section className='bg-white py-16 lg:py-24'>
       <div className='mx-auto px-4 md:px-8 lg:px-12 xl:px-16'>
-        <div
-          ref={titleRef}
-          className='flex flex-col justify-center items-center mb-20'
-        >
+        <div className='flex flex-col justify-center items-center mb-20'>
           <Title subtitle='Services' text='What we do' />
-          <p className='text-xl text-gray-600 mt-6 max-w-2xl mx-auto'>
+          <p className='text-xl text-[#3D3D47] mt-6 max-w-2xl mx-auto'>
             Find out which one of our services fit the needs of your project
           </p>
         </div>
@@ -286,4 +263,4 @@ const Services = () => {
   );
 };
 
-export default Services;
+export default Service;
