@@ -50,9 +50,13 @@ const Project = () => {
   return (
     <section className='bg-white py-16 lg:py-24'>
       <div className='px-4 md:px-8 lg:px-12 xl:px-16 max-w-7xl mx-auto'>
-        <div className='flex flex-col justify-center items-center mb-12 lg:mb-20 text-center'>
-          <Title subtitle='Our work' text='Get inspired by our work' />
-          <p className='text-lg md:text-xl text-[#3D3D47] mt-6 max-w-xl mx-auto leading-relaxed'>
+        <div className='flex flex-col justify-center items-center mb-20 text-center'>
+          <Title
+            subtitle='Our work'
+            text='Get inspired by our work'
+            variant='xs'
+          />
+          <p className='text-lg md:text-xl text-[#3D3D47] mt-6 max-w-xl mx-auto leading-relaxed text-center'>
             See how we&apos;ve transformed homes with our expert craftsmanship
             and attention to detail.
           </p>

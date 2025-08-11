@@ -7,9 +7,20 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const Title = ({ subtitle, text }) => {
+const Title = ({ subtitle, text, variant = 'md' }) => {
   const titleRef = useRef(null);
   const pillRef = useRef(null);
+
+  const variantMap = {
+    xs: 'max-w-xs',
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+    xl: 'max-w-xl',
+    full: 'max-w-full',
+  };
+
+  const maxWidthClass = variantMap[variant] || 'max-w-md';
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -52,12 +63,15 @@ const Title = ({ subtitle, text }) => {
 
   return (
     <>
-      <div ref={pillRef} className='bg-[#28282C] px-4 py-1 rounded-full w-fit'>
+      <div
+        ref={pillRef}
+        className={`bg-[#28282C] px-4 py-1 rounded-full w-fit grid place-items-center`}
+      >
         <p className='text-[16px] font-medium text-white'>{subtitle}</p>
       </div>
       <h1
         ref={titleRef}
-        className='text-[40px] font-medium text-[#28282C] mt-4 max-w-xs'
+        className={`text-[40px] font-medium text-[#28282C] mt-4 ${maxWidthClass}`}
       >
         {text}
       </h1>
