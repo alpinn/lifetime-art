@@ -1,6 +1,45 @@
 import React from 'react';
 
 import Title from '@/atoms/Title';
+import TestimonialCarousel from '@/components/TestimonialCarousel';
+
+const testimonials = [
+  {
+    name: 'Emily Carter',
+    message:
+      'I couldn’t be happier with my loft conversion. The attention to detail and quality of work were outstanding. Refit made the whole process smooth and stress-free!',
+    star: 5,
+    avatar: '/avatars/profile1.png',
+  },
+  {
+    name: 'Emily Carter',
+    message:
+      'Refit transformed our outdoor space with a beautiful garden path. The work was completed on time, and the finish is excellent. A great team to work with!',
+    star: 5,
+    avatar: '/avatars/profile3.png',
+  },
+  {
+    name: 'Emily Carter',
+    message:
+      'I couldn’t be happier with my loft conversion. The attention to detail and quality of work were outstanding. Refit made the whole process smooth and stress-free!',
+    star: 5,
+    avatar: '/avatars/profile2.png',
+  },
+  {
+    name: 'Emily Carter',
+    message:
+      'Refit transformed our outdoor space with a beautiful garden path. The work was completed on time, and the finish is excellent. A great team to work with!',
+    star: 4,
+    avatar: '/avatars/profile3.png',
+  },
+  {
+    name: 'Emily Carter',
+    message:
+      'I couldn’t be happier with my loft conversion. The attention to detail and quality of work were outstanding. Refit made the whole process smooth and stress-free!',
+    star: 2,
+    avatar: '/avatars/profile1.png',
+  },
+];
 
 const Testimonial = () => {
   return (
@@ -13,6 +52,11 @@ const Testimonial = () => {
             Refit and the quality of our craftsmanship.
           </p>
         </div>
+        <TestimonialCarousel
+          testimonials={testimonials}
+          autoplaySpeed={3000}
+          className='mt-8'
+        />
       </div>
     </section>
   );
