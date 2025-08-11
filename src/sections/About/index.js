@@ -36,7 +36,12 @@ const About = () => {
     <div className='bg-white'>
       <div className='mx-auto py-8 sm:py-12 lg:py-20'>
         <Intro />
-        <ImageCarousel images={images} />
+        <ImageCarousel
+          images={images}
+          autoplayDelay={5000}
+          showDots={true}
+          className='mb-16'
+        />
         <Statistic />
       </div>
     </div>

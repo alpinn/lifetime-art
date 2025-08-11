@@ -1,160 +1,107 @@
 'use client';
 
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import useEmblaCarousel from 'embla-carousel-react';
-import Autoplay from 'embla-carousel-autoplay';
+import { useCarousel } from '@/hooks/useCarousel';
 
-gsap.registerPlugin(ScrollTrigger);
-
-const ImageCarousel = ({ images }) => {
-  const carouselContainerRef = useRef(null);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const autoplayOptions = {
-    delay: 3000,
-    stopOnInteraction: false,
-    stopOnMouseEnter: false,
-    playOnInit: true,
-  };
-
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    {
-      loop: true,
-      align: 'center',
-      containScroll: 'trimSnaps',
-      dragFree: false,
-      slidesToScroll: 1,
-      skipSnaps: false,
-    },
-    [Autoplay(autoplayOptions)]
-  );
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on('select', onSelect);
-    emblaApi.on('reInit', onSelect);
-
-    return () => {
-      emblaApi.off('select', onSelect);
-      emblaApi.off('reInit', onSelect);
-    };
-  }, [emblaApi, onSelect]);
+const ImageCarousel = ({
+  images,
+  autoplayDelay = 4000,
+  showDots = true,
+  className = '',
+  slideClassName = '',
+  imageClassName = '',
+}) => {
+  const {
+    containerRef,
+    emblaRef,
+    selectedIndex,
+    scrollTo,
+    initializeAnimations,
+  } = useCarousel({
+    autoplayDelay,
+    animationDuration: 300,
+    animationEasing: 'power2.out',
+    staggerDelay: 0.08,
+    scrollTriggerStart: 'top 85%',
+    enableAutoplay: true,
+    loop: true,
+  });
 
   useEffect(() => {
     if (!images || images.length === 0) return;
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.carousel-slide',
-        { opacity: 0, x: -50 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.3,
-          ease: 'power2.out',
-          stagger: 0.1,
-          scrollTrigger: {
-            trigger: carouselContainerRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-    }, carouselContainerRef);
-
-    return () => ctx.revert();
-  }, [images]);
+    const cleanup = initializeAnimations(images.length);
+    return cleanup;
+  }, [images, initializeAnimations]);
 
   if (!images || images.length === 0) {
     return null;
   }
 
   return (
-    <div ref={carouselContainerRef} className='py-8 w-full overflow-hidden'>
-      <div className='embla w-full' ref={emblaRef}>
+    <div ref={containerRef} className={`relative w-full ${className}`}>
+      <div className='embla overflow-hidden' ref={emblaRef}>
         <div className='embla__container flex'>
-          {images.map((image) => (
+          {images.map((image, index) => (
             <div
-              key={image.id}
-              className='embla__slide carousel-slide flex-shrink-0 w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px] mx-2 first:ml-4 last:mr-4 md:first:ml-0 md:last:mr-0'
+              key={image.id || index}
+              className={`carousel-slide embla__slide flex-shrink-0 ${slideClassName}`}
+              style={{
+                flex: '0 0 auto',
+                width: 'clamp(280px, 90vw, 350px)',
+                marginRight: 'clamp(12px, 2vw, 20px)',
+              }}
             >
-              <div className='w-full h-[350px] sm:h-[380px] md:h-[400px] bg-gray-200 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 relative mx-auto'>
+              <div className='group relative w-full aspect-[4/5] bg-gray-100 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 ease-out hover:scale-[1.02]'>
                 <Image
                   src={image.src}
-                  alt={image.alt}
+                  alt={image.alt || `Slide ${index + 1}`}
                   fill
-                  className='object-cover select-none'
+                  className={`object-cover select-none transition-transform duration-700 group-hover:scale-105 ${imageClassName}`}
                   draggable='false'
-                  sizes='(max-width: 640px) 280px, (max-width: 768px) 300px, 320px'
+                  sizes='(max-width: 640px) 90vw, (max-width: 1024px) 350px, 380px'
+                  priority={index < 2}
                 />
+
+                {image.title && (
+                  <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                    <div className='absolute bottom-4 left-4 right-4'>
+                      <h3 className='text-white font-semibold text-lg mb-1'>
+                        {image.title}
+                      </h3>
+                      {image.description && (
+                        <p className='text-white/90 text-sm'>
+                          {image.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Mobile dots indicator */}
-      <div className='flex justify-center mt-6 md:hidden'>
-        <div className='flex space-x-2'>
-          {images.map((_, index) => (
-            <button
-              key={index}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                index === selectedIndex
-                  ? 'bg-[#28282C] scale-110'
-                  : 'bg-gray-300 hover:bg-gray-400'
-              }`}
-              onClick={() => emblaApi?.scrollTo(index)}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
+      {showDots && images.length > 1 && (
+        <div className='flex justify-center mt-6 md:hidden'>
+          <div className='flex items-center gap-2'>
+            {images.map((_, index) => (
+              <button
+                key={index}
+                className={`transition-all duration-300 rounded-full ${
+                  index === selectedIndex
+                    ? 'w-2.5 h-2.5 bg-gray-800 scale-110'
+                    : 'w-2.5 h-2.5 bg-gray-300 hover:bg-gray-400'
+                }`}
+                onClick={() => scrollTo(index)}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-
-      <style jsx>{`
-        .embla {
-          overflow: hidden;
-        }
-        .embla__container {
-          display: flex;
-        }
-        .embla__slide {
-          position: relative;
-          min-width: 0;
-        }
-
-        /* Mobile-first responsive adjustments */
-        @media (max-width: 640px) {
-          .embla__slide {
-            flex: 0 0 calc(100vw - 2rem);
-            max-width: 280px;
-            margin: 0 0.5rem;
-          }
-        }
-
-        @media (min-width: 641px) and (max-width: 768px) {
-          .embla__slide {
-            flex: 0 0 300px;
-            margin: 0 0.625rem;
-          }
-        }
-
-        @media (min-width: 769px) {
-          .embla__slide {
-            flex: 0 0 320px;
-            margin: 0 0.625rem;
-          }
-        }
-      `}</style>
+      )}
     </div>
   );
 };

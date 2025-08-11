@@ -96,7 +96,7 @@ const ProjectCard = ({ project, index, isEven }) => {
         </div>
 
         <div className='mb-6 lg:mb-8'>
-          <div className='flex items-start gap:2 md:gap-4'>
+          <div className='flex items-start gap-2 md:gap-4'>
             <div className='flex-shrink-0'>
               {!isEven ? (
                 <Image
