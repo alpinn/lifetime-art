@@ -5,6 +5,7 @@ import Service from '@/sections/Service';
 import Project from '@/sections/Project';
 import Testimonial from '@/sections/Testimonial';
 import FAQ from '@/sections/FAQ';
+import Contact from '@/sections/Contact';
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <Project />
       <Testimonial />
       <FAQ />
+      <Contact />
     </>
   );
 }

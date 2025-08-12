@@ -167,7 +167,7 @@ const FAQ = () => {
             />
           </div>
         </div>
-        <div ref={containerRef} className='max-w-4xl mx-auto space-y-4'>
+        <div ref={containerRef} className='mx-auto space-y-4'>
           {faqData.map((faq, index) => (
             <div
               key={faq.id}

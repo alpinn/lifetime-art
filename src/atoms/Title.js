@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const Title = ({ subtitle, text, variant = 'md' }) => {
+const Title = ({ subtitle, text, variant = 'md', color = '#28282C' }) => {
   const titleRef = useRef(null);
   const pillRef = useRef(null);
 
@@ -71,7 +71,7 @@ const Title = ({ subtitle, text, variant = 'md' }) => {
       </div>
       <h1
         ref={titleRef}
-        className={`text-[40px] font-medium text-[#28282C] mt-4 ${maxWidthClass}`}
+        className={`text-[40px] font-medium mt-4 ${maxWidthClass} ${color}`}
       >
         {text}
       </h1>
