@@ -2,6 +2,10 @@
 
 import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap/gsap-core';
+import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const statistic = [
   {
@@ -28,9 +32,8 @@ const statistic = [
 
 const Statistic = () => {
   const statsRef = useRef(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
+  useGSAP(
+    () => {
       gsap.fromTo(
         '.stat-item',
         { opacity: 0, y: 30 },
@@ -47,10 +50,9 @@ const Statistic = () => {
           },
         }
       );
-    }, statsRef);
-
-    return () => ctx.revert();
-  }, []);
+    },
+    { scope: statsRef }
+  );
 
   return (
     <div

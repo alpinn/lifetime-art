@@ -10,37 +10,31 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 const ProjectCard = ({ project, index, isEven }) => {
   const cardRef = useRef(null);
 
-  useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return;
-    gsap.set(card, {
-      opacity: 0,
-      y: 50,
-    });
+  useGSAP(
+    () => {
+      const card = cardRef.current;
+      if (!card) return;
 
-    const animation = gsap.to(card, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      ease: 'power2.out',
-      delay: index * 0.15,
-    });
-
-    ScrollTrigger.create({
-      trigger: card,
-      start: 'top 85%',
-      animation: animation,
-      once: true,
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.trigger === card) {
-          trigger.kill();
-        }
+      gsap.set(card, {
+        opacity: 0,
+        y: 50,
       });
-    };
-  }, [index]);
+
+      gsap.to(card, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        delay: index * 0.15,
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 85%',
+          once: true,
+        },
+      });
+    },
+    { scope: cardRef, dependencies: [index] }
+  );
 
   return (
     <div

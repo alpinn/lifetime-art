@@ -2,14 +2,18 @@
 
 import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap/gsap-core';
+import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 import Title from '@/atoms/Title';
 
 const Intro = () => {
   const introRef = useRef(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
+  useGSAP(
+    () => {
       gsap.fromTo(
         introRef.current,
         { opacity: 0, x: 50 },
@@ -26,10 +30,9 @@ const Intro = () => {
           },
         }
       );
-    }, introRef);
-
-    return () => ctx.revert();
-  }, []);
+    },
+    { scope: introRef }
+  );
 
   return (
     <>
