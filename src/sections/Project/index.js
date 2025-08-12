@@ -48,7 +48,7 @@ const projects = [
 
 const Project = () => {
   return (
-    <section className='bg-white py-16 lg:py-24'>
+    <section className='bg-white py-16 lg:py-24' id='work'>
       <div className='px-4 md:px-8 lg:px-12 xl:px-16 mx-auto'>
         <div className='flex flex-col justify-center items-center mb-20 text-center'>
           <Title

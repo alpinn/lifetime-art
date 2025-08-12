@@ -134,6 +134,23 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
+  const handleScrollToSection = (e, href) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const targetElement = document.getElementById(targetId);
+
+    if (targetElement) {
+      gsap.to(window, {
+        duration: 1.5,
+        scrollTo: {
+          y: targetElement,
+          offsetY: 80,
+        },
+        ease: 'power2.inOut',
+      });
+    }
+  };
+
   const navbarClasses = cn(
     'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
     {
@@ -208,6 +225,7 @@ const Navbar = () => {
                 <a
                   key={item.name}
                   href={item.href}
+                  onClick={(e) => handleScrollToSection(e, item.href)}
                   ref={(el) => (navItemsRef.current[index] = el)}
                   className={navLinkClasses}
                 >

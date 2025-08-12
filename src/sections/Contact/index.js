@@ -64,6 +64,7 @@ const Contact = () => {
     <section
       ref={sectionRef}
       className='min-h-screen py-16 lg:py-24 px-4 md:px-8'
+      id='contact'
     >
       <div className='bg-primary mx-auto rounded-xl py-8 lg:py-16 px-4 md:px-8 max-w-7xl'>
         <div className='grid lg:grid-cols-2 gap-8 lg:gap-16 items-start'>

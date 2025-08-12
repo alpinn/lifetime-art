@@ -33,7 +33,7 @@ const images = [
 
 const About = () => {
   return (
-    <div className='bg-white'>
+    <section className='bg-white' id='about'>
       <div className='mx-auto py-8 sm:py-12 lg:py-20'>
         <Intro />
         <ImageCarousel
@@ -44,7 +44,7 @@ const About = () => {
         />
         <Statistic />
       </div>
-    </div>
+    </section>
   );
 };
 

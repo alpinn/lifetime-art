@@ -151,7 +151,7 @@ const Service = () => {
   }, [isOpen]);
 
   return (
-    <section className='bg-[#FAFAFA] py-16 lg:py-24'>
+    <section className='bg-[#FAFAFA] py-16 lg:py-24' id='services'>
       <div className='mx-auto px-4 md:px-8 lg:px-12 xl:px-16'>
         <div className='flex flex-col justify-center items-center mb-20'>
           <Title subtitle='Services' text='What we do' />
