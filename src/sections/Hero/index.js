@@ -221,7 +221,8 @@ const Hero = () => {
                       <Button
                         text='Work with us'
                         className='bg-white/10 backdrop-blur-xs text-white hover:bg-black/70 text-sm sm:text-[16px] px-4 sm:px-6 py-2 sm:py-3'
-                        arrowClassName='bg-white text-black button-arrow'
+                        arrowClassName='bg-white button-arrow'
+                        isWhite={false}
                       />
                     </div>
                   </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -8,6 +8,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import Title from '@/atoms/Title';
 import { cn } from '@/utils/cn';
+import { useDisclosure } from '@/hooks/useDisclosure';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -20,7 +21,7 @@ const services = [
     iconPath: '/icons/kitchen.svg',
     image: '/images/kitchen.jpg',
     description:
-      'At LifetimeArt, we design and build stunning kitchens tailored to your style and needs. Whether you prefer sleek modern lines or a timeless, classic look, our team delivers premium craftsmanship, functional layouts, and meticulous attention to detail—creating a kitchen you’ll love to cook and gather in.',
+      "At LifetimeArt, we design and build stunning kitchens tailored to your style and needs. Whether you prefer sleek modern lines or a timeless, classic look, our team delivers premium craftsmanship, functional layouts, and meticulous attention to detail—creating a kitchen you'll love to cook and gather in.",
   },
   {
     id: 'loft-conversions',
@@ -44,7 +45,7 @@ const services = [
     iconPath: '/icons/extension.svg',
     image: '/images/extension.png',
     description:
-      'Expand your living space without compromising on style. Whether it’s a kitchen extension, a new family room, or an entire additional floor, we work closely with you to design and build an extension that complements your home and adds value.',
+      "Expand your living space without compromising on style. Whether it's a kitchen extension, a new family room, or an entire additional floor, we work closely with you to design and build an extension that complements your home and adds value.",
   },
   {
     id: 'restorations',
@@ -65,60 +66,56 @@ const services = [
 ];
 
 const Service = () => {
-  const [activeService, setActiveService] = useState('kitchens');
-  const [expandedItems, setExpandedItems] = useState({ kitchens: true });
+  const { isOpen, toggle } = useDisclosure({
+    defaultOpen: 'kitchens',
+    allowMultiple: false,
+  });
 
   const imageRef = useRef(null);
   const accordionRef = useRef(null);
   const descriptionRefs = useRef({});
 
+  const activeServiceId =
+    services.find((service) => isOpen(service.id))?.id || 'kitchens';
   const activeServiceData =
-    services.find((service) => service.id === activeService) || services[0];
+    services.find((service) => service.id === activeServiceId) || services[0];
 
   const handleServiceClick = (serviceId) => {
-    const wasExpanded = expandedItems[serviceId];
-    setExpandedItems({});
-    if (!wasExpanded) {
-      setActiveService(serviceId);
-      setTimeout(() => {
-        setExpandedItems({ [serviceId]: true });
-      }, 100);
+    const wasOpen = isOpen(serviceId);
+    if (!wasOpen) {
+      toggle(serviceId);
     }
   };
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        accordionRef.current?.querySelectorAll('.service-item') || [],
-        {
-          opacity: 0,
-          y: 15,
+  useGSAP(() => {
+    gsap.fromTo(
+      accordionRef.current?.querySelectorAll('.service-item') || [],
+      {
+        opacity: 0,
+        y: 15,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.3,
+        stagger: 0.1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: accordionRef.current,
+          start: 'top 80%',
+          once: true,
         },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.3,
-          stagger: 0.1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: accordionRef.current,
-            start: 'top 80%',
-            once: true,
-          },
-        }
-      );
-    });
-
-    return () => ctx.revert();
+      }
+    );
   }, []);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (imageRef.current) {
       gsap.fromTo(
         imageRef.current,
         {
           opacity: 0,
-          scale: 0.95,
+          scale: 0.98,
         },
         {
           opacity: 1,
@@ -128,28 +125,30 @@ const Service = () => {
         }
       );
     }
-  }, [activeService]);
+  }, [activeServiceId]);
 
-  useEffect(() => {
-    Object.keys(expandedItems).forEach((serviceId) => {
-      if (expandedItems[serviceId] && descriptionRefs.current[serviceId]) {
+  useGSAP(() => {
+    services.forEach((service) => {
+      if (isOpen(service.id) && descriptionRefs.current[service.id]) {
+        gsap.set(descriptionRefs.current[service.id], { opacity: 1 });
+
         gsap.fromTo(
-          descriptionRefs.current[serviceId],
+          descriptionRefs.current[service.id],
           {
             opacity: 0,
-            x: 20,
+            x: 15,
           },
           {
             opacity: 1,
             x: 0,
             duration: 0.3,
             ease: 'power2.out',
-            delay: 0.1,
+            delay: 0.15,
           }
         );
       }
     });
-  }, [expandedItems]);
+  }, [isOpen]);
 
   return (
     <section className='bg-[#FAFAFA] py-16 lg:py-24'>
@@ -173,7 +172,7 @@ const Service = () => {
                   height={0}
                   sizes='100vw'
                   className='w-full h-auto'
-                  priority={activeService === 'kitchens'}
+                  priority={activeServiceId === 'kitchens'}
                 />
               </div>
             </div>
@@ -189,16 +188,14 @@ const Service = () => {
                   onClick={() => handleServiceClick(service.id)}
                   className={cn(
                     'w-full flex items-center justify-between py-6 text-left transition-all duration-300 hover:text-gray-900 group',
-                    expandedItems[service.id]
-                      ? 'text-gray-900'
-                      : 'text-gray-600'
+                    isOpen(service.id) ? 'text-gray-900' : 'text-gray-600'
                   )}
                 >
                   <div className='flex items-center gap-4'>
                     <div
                       className={cn(
                         'w-6 h-6 flex items-center justify-center transition-colors duration-300',
-                        expandedItems[service.id]
+                        isOpen(service.id)
                           ? 'text-gray-900'
                           : 'text-gray-500 group-hover:text-gray-700'
                       )}
@@ -217,7 +214,7 @@ const Service = () => {
                   <div
                     className={cn(
                       'w-6 h-6 flex items-center justify-center transition-all duration-300',
-                      expandedItems[service.id]
+                      isOpen(service.id)
                         ? 'rotate-45 text-gray-900'
                         : 'rotate-0 text-gray-500 group-hover:text-gray-700'
                     )}
@@ -237,8 +234,8 @@ const Service = () => {
 
                 <div
                   className={cn(
-                    'overflow-hidden transition-all duration-400 ease-out',
-                    expandedItems[service.id]
+                    'overflow-hidden transition-all duration-300 ease-out',
+                    isOpen(service.id)
                       ? 'max-h-96 opacity-100'
                       : 'max-h-0 opacity-0'
                   )}
@@ -246,7 +243,7 @@ const Service = () => {
                   <div className='pb-6 pr-10'>
                     <div
                       ref={(el) => (descriptionRefs.current[service.id] = el)}
-                      className='opacity-0'
+                      className={isOpen(service.id) ? 'opacity-1' : 'opacity-0'}
                     >
                       <p className='text-gray-600 leading-relaxed'>
                         {service.description}
