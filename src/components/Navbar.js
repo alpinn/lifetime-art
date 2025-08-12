@@ -36,8 +36,8 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
+  useGSAP(
+    () => {
       gsap.fromTo(
         navbarRef.current,
         { opacity: 0, y: -50 },
@@ -74,13 +74,14 @@ const Navbar = () => {
           delay: 0.3,
         }
       );
-    }, navbarRef);
+    },
+    { scope: navbarRef }
+  );
 
-    return () => ctx.revert();
-  }, []);
+  useGSAP(
+    () => {
+      if (!mobileMenuRef.current) return;
 
-  useEffect(() => {
-    if (mobileMenuRef.current) {
       if (isMobileMenuOpen) {
         document.body.style.overflow = 'hidden';
 
@@ -117,14 +118,9 @@ const Navbar = () => {
           ease: 'power2.in',
         });
       }
-    }
-
-    return () => {
-      if (!isMobileMenuOpen) {
-        document.body.style.overflow = '';
-      }
-    };
-  }, [isMobileMenuOpen]);
+    },
+    { dependencies: [isMobileMenuOpen] }
+  );
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
